@@ -21,7 +21,8 @@ export function Campaign({ wagmiClient }) {
   const [balance, setBalance] = useState(0);
   const [campainDetail, setcampainDetail] = useState([]);
   const [transactions, setTransactions] = useState([]);
-  const walletAddress = "0xb3216ae6c979dec5fa318117305efd23181db8bb";
+  const [walletAddress, setWalletAddress] = useState(['0xb3216ae6c979dec5fa318117305efd23181db8bb']);
+  //const walletAddress = "0xb3216ae6c979dec5fa318117305efd23181db8bb";
 
   // const provider = useProvider();
   useEffect(() => {
@@ -45,6 +46,7 @@ export function Campaign({ wagmiClient }) {
         const data = await response.json();
         console.log('API response data:', data);  // Log the response data
         setcampainDetail(data);
+        setWalletAddress(data.ewalletAddress);
       } catch (error) {
         console.error('Failed to fetch campainDetail:', error);  // Log any errors
         //setError(error.message);
@@ -77,6 +79,7 @@ export function Campaign({ wagmiClient }) {
           const filteredTransactions = response.data.result.filter(transaction => transaction.to.toLowerCase() === walletAddress.toLowerCase());
           setTransactions(filteredTransactions);
         } else {
+          setTransactions([]);
           setError(response.data.message);
         }
         setLoading(false);
