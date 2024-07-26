@@ -102,7 +102,7 @@ export function Campaign({ wagmiClient }) {
       // If found, ensure all storages are synced with the referral ID
       const expirationDate = new Date(Date.now() + 2592000000); // 30 days in milliseconds
 
-      cookies.set('referral_id', referralId, { path: '/', expires: expirationDate });
+      cookies.set('referral_id', referralId, { path: '/', expires: expirationDate, domain: '.tadaup.com', });
       localStorage.setItem('referral_id', referralId);
       localStorage.setItem('referral_expiry', expirationDate.toISOString());
       sessionStorage.setItem('referral_id', referralId);
