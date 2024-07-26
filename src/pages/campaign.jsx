@@ -12,6 +12,8 @@ import { ethers } from 'ethers';
 import { useAccount, useWalletClient, useSendTransaction, } from 'wagmi';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useLocation } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
 export function Campaign({ wagmiClient }) {
   const { id } = useParams();
@@ -22,12 +24,11 @@ export function Campaign({ wagmiClient }) {
   const [campainDetail, setcampainDetail] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [walletAddress, setWalletAddress] = useState(['0xb3216ae6c979dec5fa318117305efd23181db8bb']);
-  //const walletAddress = "0xb3216ae6c979dec5fa318117305efd23181db8bb";
+  const cookies = new Cookies();
+  const location = useLocation();
 
   // const provider = useProvider();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [])
+
   useEffect(() => {
     if (isConnected && walletClient) {
       loadBalance()
@@ -37,27 +38,29 @@ export function Campaign({ wagmiClient }) {
 
   //Campaign Detail
   useEffect(() => {
-    const fetchcampainDetail = async () => {
-      try {
-        const response = await fetch(`https://admin.tadaup.com/public/api/homecampainfx/campainDetail/${id}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        console.log('API response data:', data);  // Log the response data
-        setcampainDetail(data);
-        setWalletAddress(data.ewalletAddress);
-      } catch (error) {
-        console.error('Failed to fetch campainDetail:', error);  // Log any errors
-        //setError(error.message);
-      } finally {
-        //setLoading(false);
-      }
-    };
+    window.scrollTo(0, 0);
     fetchcampainDetail();
   }, []);
 
-  //Transaction history
+  const fetchcampainDetail = async () => {
+    try {
+      const response = await fetch(`https://admin.tadaup.com/public/api/homecampainfx/campainDetail/${id}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      console.log('API response data:', data);  // Log the response data
+      setcampainDetail(data);
+      setWalletAddress(data.ewalletAddress);
+    } catch (error) {
+      console.error('Failed to fetch campainDetail:', error);  // Log any errors
+      //setError(error.message);
+    } finally {
+      //setLoading(false);
+    }
+  };
+
+  //Transaction history``
   useEffect(() => {
     const apiUrl = "https://api.bscscan.com/api";
     const params = {
@@ -90,17 +93,27 @@ export function Campaign({ wagmiClient }) {
       });
   }, [walletAddress]);
 
+  useEffect(() => {
+    // Extract 'sponserid' from the query string
+    const query = new URLSearchParams(location.search);
+    const referralId = query.get('sponserid');
+
+    if (referralId) {
+      // If found, ensure all storages are synced with the referral ID
+      const expirationDate = new Date(Date.now() + 2592000000); // 30 days in milliseconds
+
+      cookies.set('referral_id', referralId, { path: '/', expires: expirationDate });
+      localStorage.setItem('referral_id', referralId);
+      localStorage.setItem('referral_expiry', expirationDate.toISOString());
+      sessionStorage.setItem('referral_id', referralId);
+    }
+  }, [location]);
+
   const maskAddress = (address) => {
     return address.substring(0, 10) + "........" + address.substring(address.length - 10);
   };
 
   const loadBalance = async () => {
-    // if(!isConnected) return false;
-
-    // const dataBalance = await fetchUSDTBalance().catch((e) => {
-    //   console.log("error:" + e)
-    //   return 0
-    // })
     try {
       const getConnectProvider = await connector.getProvider();
       const provider = new ethers.providers.Web3Provider(getConnectProvider);
@@ -112,6 +125,7 @@ export function Campaign({ wagmiClient }) {
     }
     // setBalance(dataBalance || 0)
   }
+
   const handleChange = (e) => {
     const rawValue = e.target.value;
     const cleanedValue = rawValue.replace(/[^0-9.]/g, '');
@@ -119,11 +133,11 @@ export function Campaign({ wagmiClient }) {
     setValue(formattedValue);
   };
 
-
   const _evtSendUSDT = () => {
     // sendUSDT(value, "0x1C068dFf6a6a3e42227f35BB907Bac32E3303Ce4")
     sendUsdt2()
   }
+
   const {
     data: hash,
     isPending,
@@ -150,6 +164,7 @@ export function Campaign({ wagmiClient }) {
       console.error("Failed to send USDT", error);
     }
   };
+
   return (
     <>
 
