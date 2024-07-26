@@ -39,7 +39,7 @@ export function Campaign({ wagmiClient }) {
   useEffect(() => {
     const fetchcampainDetail = async () => {
       try {
-        const response = await fetch(`https://tadaup.com/public/api/homecampainfx/campainDetail/${id}`);
+        const response = await fetch(`https://admin.tadaup.com/public/api/homecampainfx/campainDetail/${id}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -144,7 +144,8 @@ export function Campaign({ wagmiClient }) {
         data: `0xa9059cbb000000000000000000000000${recipient.toLowerCase().replace('0x', '')}${Math.floor(amountToSend).toString(16).padStart(64, '0')}`,
         value: '0x0',
       };
-      sendTransaction(transactionObject)
+      let tx = await sendTransaction(transactionObject)
+      console.log('transaction hash', tx)
     } catch (error) {
       console.error("Failed to send USDT", error);
     }

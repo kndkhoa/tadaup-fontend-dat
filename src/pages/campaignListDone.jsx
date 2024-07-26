@@ -24,7 +24,7 @@ export function Home() {
   useEffect(() => {
     const fetchCampaigns = async () => {
       try {
-        const response = await fetch('https://tadaup.com/public/api/homecampainfx/campainDone');
+        const response = await fetch('https://admin.tadaup.com/public/api/homecampainfx/campainDone');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

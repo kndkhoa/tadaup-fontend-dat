@@ -25,7 +25,7 @@ export function Home() {
     const fetchCampaigns = async () => {
       try {
         console.log('fetchCampaigns RUN');
-        const response = await fetch('https://tadaup.com/public/api/homecampainfx/campainRun');
+        const response = await fetch('https://admin.tadaup.com/public/api/homecampainfx/campainRun');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
