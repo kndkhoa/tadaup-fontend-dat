@@ -1,6 +1,6 @@
 export const teamData = [
   {
-    img: "/img/team-1.jpg",
+    img: "/img/dat.jpg",
     name: "Army Phan",
     position: "Founder Tadaup",
     socials: [
@@ -22,7 +22,7 @@ export const teamData = [
     ],
   },
   {
-    img: "/img/team-2.jpg",
+    img: "/img/Hieu.jpg",
     name: "Hieu Hoc",
     position: "Marketing Specialist",
     socials: [
@@ -66,8 +66,8 @@ export const teamData = [
     ],
   },
   {
-    img: "/img/team-4.png",
-    name: "Khoa Nguyen",
+    img: "/img/khoa.jpg",
+    name: "Mr.Khoa",
     position: "Technical Lead",
     socials: [
       {
